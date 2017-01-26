@@ -25,10 +25,14 @@ class IssueTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
         loadData()
-      
     }
+
     
     func loadData() {
         
@@ -111,7 +115,7 @@ class IssueTableViewController: UITableViewController {
     
     
     @IBAction func unwindToIssueList(sender: UIStoryboardSegue) {
-         loadData()
+         //loadData()
         
     }
   
