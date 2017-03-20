@@ -29,6 +29,10 @@ class SignInViewController: UIViewController {
     @IBOutlet var signInEmbeddedButton: UIButton?
     @IBOutlet var forgetButton: UIButton?
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.navigationController?.navigationBar.isHidden = true
+    }
     
     @IBAction func signInEmbedded(_ sender: UIButton?) {
         if oauth2.isAuthorizing {

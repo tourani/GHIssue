@@ -4,7 +4,6 @@
 //
 //  Created by Sanjay on 1/25/17.
 
-
 import UIKit
 import p2_OAuth2
 import Alamofire
@@ -22,6 +21,9 @@ class EditIssueViewController: UIViewController, UITextFieldDelegate, UITextView
     @IBOutlet weak var openButton: UIButton!
     @IBOutlet weak var stateLabel: UILabel!
     
+    var titleText: String!
+    var bodyText: String!
+    
     var loader: OAuth2DataLoader?
     var oauth2: OAuth2CodeGrant?
     var sessionManager: SessionManager?
@@ -32,18 +34,30 @@ class EditIssueViewController: UIViewController, UITextFieldDelegate, UITextView
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        bodyTextView.layer.borderColor = UIColor.black.cgColor
+        titleTextField.layer.borderColor = UIColor(colorLiteralRed: 219/255, green: 219/255, blue: 219/255, alpha: 1).cgColor
+        titleTextField.layer.borderWidth = 1.0
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: titleTextField.frame.height))
+        titleTextField.leftView = paddingView
+        titleTextField.leftViewMode = .always
+        titleTextField.text = titleText
+        
+        bodyTextView.layer.borderColor = UIColor(colorLiteralRed: 219/255, green: 219/255, blue: 219/255, alpha: 1).cgColor
         bodyTextView.layer.borderWidth = 1.0
+        bodyTextView.text = bodyText
         
         titleTextField.delegate = self
         bodyTextView.delegate = self
+        
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        
+        self.navigationController?.navigationBar.barTintColor = UIColor(colorLiteralRed: 50/255, green: 130/255, blue: 204/255, alpha: 1)
         
         if self.locked == true {
             self.openButton.isHidden = false
             self.closeButton.isHidden = true
             self.stateLabel.text = "This issue is locked"
-        }
-        else{
+        } else {
             self.openButton.isHidden = true
             self.closeButton.isHidden = false
             self.stateLabel.text = "This issue is unlocked"

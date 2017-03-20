@@ -3,7 +3,6 @@
 //  OAuth2PodApp
 //
 //  Created by Sanjay on 1/23/17.
-
 //
 
 import UIKit
@@ -25,23 +24,28 @@ class IssueTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        
+        /*
+        self.navigationController?.navigationBar.backgroundColor = UIColor(colorLiteralRed: 45/255, green: 114/255, blue: 193/255, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = true
+        */
+        //self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.backgroundColor = UIColor(colorLiteralRed: 50/255, green: 130/255, blue: 204/255, alpha: 1)
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        self.navigationController?.navigationBar.barTintColor = UIColor(colorLiteralRed: 50/255, green: 130/255, blue: 204/255, alpha: 1)
+        
         
         loadData()
+      
     }
-
     
     func loadData() {
         
         issues.removeAll()
-        
         let url = "https://api.github.com/repos/" + repoName! + "/issues"
-        
         sessionManager?.request(url).validate().responseJSON { response in
-           
             if let array = response.result.value as? [Any]{
                 for  dict in array{
                     if let dict = dict as? [String: Any], let title = dict["title"] as? String, let body = dict["body"] as? String, let state = dict["state"] as? String, let comments = dict["comments"] as? Int, let number = dict["number"] as? Int, let locked = dict["locked"] as? Bool {
@@ -49,21 +53,28 @@ class IssueTableViewController: UITableViewController {
                         if let issue = Issue(title: title, body: body, state: state, comments: comments, number: number, locked: locked){
                             self.issues.append(issue)
                         }
-                        
                     }
                 }
-                
                 self.didGetData()
             }
-            
         }
-        
-
     }
     
     func didGetData(){
         
         tableView.reloadData()
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        let touch: UITouch? = touches.first
+        if (touch?.view is UITextView) {
+            self.tableView.isScrollEnabled = false
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.tableView.isScrollEnabled = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -92,19 +103,18 @@ class IssueTableViewController: UITableViewController {
         }
         
         let issue = issues[indexPath.row]
-        
         cell.titleLabel.text = issue.title
-        cell.bodyLabel.layer.borderColor = UIColor.black.cgColor
+        cell.bodyLabel.layer.borderColor = UIColor(colorLiteralRed: 219/255, green: 219/255, blue: 219/255, alpha: 1).cgColor
         cell.bodyLabel.layer.borderWidth = 1.0
         cell.bodyLabel.text = issue.body
+        cell.bodyLabel.textContainer.lineBreakMode = .byTruncatingTail
         cell.bodyLabel.isUserInteractionEnabled = false
         cell.commentsLabel.text = String(issue.comments) + " comments"
         
         if issue.locked {
             cell.lockedButton.isHidden = false
             cell.unlockedButton.isHidden = true
-        }
-        else{
+        } else {
             cell.lockedButton.isHidden = true
             cell.unlockedButton.isHidden = false
         }
@@ -115,8 +125,7 @@ class IssueTableViewController: UITableViewController {
     
     
     @IBAction func unwindToIssueList(sender: UIStoryboardSegue) {
-         //loadData()
-        
+         loadData()
     }
   
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -138,10 +147,8 @@ class IssueTableViewController: UITableViewController {
             guard let destVC = segue.destination as? EditIssueViewController, let button = sender as? UIButton else {
                 fatalError("Unexpected destination: \(segue.destination)")
             }
-            guard let  cell = button.superview?.superview as? IssueTableViewCell, let indexPath = tableView.indexPath(for: cell) else{
-                
+            guard let cell = button.superview?.superview as? IssueTableViewCell, let indexPath = tableView.indexPath(for: cell) else{
                 fatalError("cannot find selected cell")
-                
             }
 
             destVC.oauth2 = self.oauth2
@@ -150,6 +157,9 @@ class IssueTableViewController: UITableViewController {
             destVC.repoName = self.repoName
             destVC.issueNumber = String(self.issues[indexPath.row].number)
             destVC.locked = self.issues[indexPath.row].locked
+            
+            destVC.titleText = self.issues[indexPath.row].title
+            destVC.bodyText = self.issues[indexPath.row].body
             
         default:
             fatalError("Unexpected Segue Identifier; \(segue.identifier)")

@@ -4,7 +4,6 @@
 //
 //  Created by Sanjay on 1/23/17.
 
-
 import UIKit
 import p2_OAuth2
 import Alamofire
@@ -31,6 +30,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         
         avatarVIew.layer.cornerRadius = avatarVIew.frame.size.width/2
         avatarVIew.clipsToBounds = true
@@ -67,17 +67,18 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                         self.didGetUserRepo()
                     }
                 }
-                
             }
-            
         }
- 
-      
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationItem.hidesBackButton = true
+
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-       
     }
     
     func didGetUserRepo()  {
@@ -133,10 +134,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             else {
                 self.infoLabel.text = ""
             }
-
-
-          
-        
         }
     }
     
@@ -147,7 +144,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                     let data = try response.responseData()
                     DispatchQueue.main.async {
                         self.avatarVIew.image = UIImage(data: data)
-                        
                     }
                 }
                 catch let error {
@@ -159,7 +155,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             sessionManager?.request(url).validate().responseData() { response in
                 if let data = response.result.value {
                     self.avatarVIew.image = UIImage(data: data)
-                    
                 }
                 else {
                     print("Failed to load avatar: \(response)")
@@ -170,6 +165,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -184,6 +183,16 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         cell.repoNameLabel.text = repos[indexPath.row]
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let destVC = storyboard.instantiateViewController(withIdentifier: "IssueTableViewControllerID") as! IssueTableViewController
+        destVC.oauth2 = self.oauth2
+        destVC.loader = self.loader
+        destVC.sessionManager = self.sessionManager
+        destVC.repoName = repos[indexPath.row]
+        self.navigationController?.pushViewController(destVC, animated: true)
     }
 
 

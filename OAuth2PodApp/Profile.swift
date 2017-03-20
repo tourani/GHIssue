@@ -3,9 +3,7 @@
 //  OAuth2PodApp
 //
 //  Created by Sanjay on 1/25/17.
-
 //
-
  import UIKit
  
  class Profile: NSObject {

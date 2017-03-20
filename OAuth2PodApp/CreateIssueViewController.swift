@@ -3,6 +3,7 @@
 //  OAuth2PodApp
 //
 //  Created by Sanjay on 1/24/17.
+//  Copyright © 2017 Ossus. All rights reserved.
 //
 
 import UIKit
@@ -26,11 +27,22 @@ class CreateIssueViewController: UIViewController, UITextViewDelegate, UITextFie
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        commentTextView.layer.borderColor = UIColor.black.cgColor
+        titleTextFiled.layer.borderColor = UIColor(colorLiteralRed: 219/255, green: 219/255, blue: 219/255, alpha: 1).cgColor
+        titleTextFiled.layer.borderWidth = 1.0
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: titleTextFiled.frame.height))
+        titleTextFiled.leftView = paddingView
+        titleTextFiled.leftViewMode = .always
+        
+        commentTextView.layer.borderColor = UIColor(colorLiteralRed: 219/255, green: 219/255, blue: 219/255, alpha: 1).cgColor
         commentTextView.layer.borderWidth = 1.0
         
         titleTextFiled.delegate = self
         commentTextView.delegate = self
+        
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        
+        self.navigationController?.navigationBar.barTintColor = UIColor(colorLiteralRed: 50/255, green: 130/255, blue: 204/255, alpha: 1)
        
     }
 

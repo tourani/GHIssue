@@ -1,9 +1,8 @@
 //
-//  ProfileTableViewCell.swift
+//  IssueTableViewCell.swift
 //  OAuth2PodApp
 //
 //  Created by Sanjay on 1/23/17.
-
 //
 
 import UIKit
