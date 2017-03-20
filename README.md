@@ -5,7 +5,7 @@ GHIssue
 This is a simple app that allows user to login to their Github account and then displays their profile along with a list of their repositories. Users are also able to look at individual open issues that are a part of the repository and make changes to these existing issues. Additionally users can also create new issues.
 
 
-##Frameworks & Libraries Used
+## Frameworks & Libraries Used
 
 This app uses the [OAuth2 framework][oauth2] for authentication purposes.
 
